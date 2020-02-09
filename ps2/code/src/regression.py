@@ -6,7 +6,8 @@ Author      : Yi-Chieh Wu, Sriram Sankararaman
 
 # python libraries
 import os
-
+import time
+import math
 # numpy libraries
 import numpy as np
 
@@ -115,8 +116,16 @@ class PolynomialRegression() :
         # part b: modify to create matrix for simple linear model
         # part g: modify to create matrix for polynomial model
 
+
         Phi = np.insert(X, 0, 1, axis=1)
+
         m = self.m_
+        if m == 0:
+            Phi = Phi[:,[0]]
+        elif m != 1:
+            for i in range(2, m+1):
+                Phi = np.insert(Phi, i, [Phi[j][1] ** i for j in range(n) ],axis=1)
+
 
 
         ### ========== TODO : END ========== ###
@@ -166,7 +175,7 @@ class PolynomialRegression() :
             # change the default eta in the function signature to 'eta=None'
             # and update the line below to your learning rate function
             if eta_input is None :
-                eta = None # change this line
+                eta = float(1) / (1+t)
             else :
                 eta = eta_input
             ### ========== TODO : END ========== ###
@@ -180,6 +189,7 @@ class PolynomialRegression() :
                 for index, prediction in enumerate(h):
                     s += (prediction - y[index]) * X[index][j]
                 self.coef_[j] -= 2 * eta * s
+
 
             # track error
             # hint: you cannot use self.predict(...) to make the predictions
@@ -232,7 +242,7 @@ class PolynomialRegression() :
         # part e: implement closed-form solution
         # hint: use np.dot(...) and np.linalg.pinv(...)
         #       be sure to update self.coef_ with your solution
-        
+
         a = np.linalg.pinv(np.dot(np.transpose(X), X))
         b = np.dot(np.transpose(X), y)
         self.coef_ = np.dot(a, b)
@@ -304,7 +314,8 @@ class PolynomialRegression() :
         """
         ### ========== TODO : START ========== ###
         # part h: compute RMSE
-        error = 0
+        J = self.cost(X, y)
+        error = math.sqrt(J / X.shape[0])
         ### ========== TODO : END ========== ###
         return error
 
@@ -355,8 +366,14 @@ def main() :
         model.fit_GD(train_data.X, train_data.y, eta=eta_)
         print("Eta: %8.6f Cost: %5.2f" %(eta_, model.cost(train_data.X, train_data.y)))
     """
+    #model.coef_ = np.zeros(2)
+    #start = time.time()
+    #model.fit(train_data.X, train_data.y)
+    #time_taken = time.time() - start
+    #print(time_taken)
+    #print("Cost: %5.2f" %(model.cost(train_data.X, train_data.y)))
     model.coef_ = np.zeros(2)
-    model.fit(train_data.X, train_data.y)
+    model.fit_GD(train_data.X, train_data.y)
     print("Cost: %5.2f" %(model.cost(train_data.X, train_data.y)))
     ### ========== TODO : END ========== ###
 
@@ -366,15 +383,28 @@ def main() :
     # parts g-i: main code for polynomial regression
     print 'Investigating polynomial regression...'
 
+
+    degrees = []
+    train_errors = []
+    test_errors = []
+    for i in range(0, 11):
+        model = PolynomialRegression(m = i)
+        degrees.append(i)
+        model.coef_ = np.zeros(2)
+        model.fit(train_data.X, train_data.y)
+        train_errors.append(model.rms_error(train_data.X, train_data.y))
+        test_errors.append(model.rms_error(test_data.X, test_data.y))
+
+    fig, ax = plt.subplots()
+    ax.plot(degrees, test_errors)
+    ax.plot(degrees, train_errors)
+    ax.set_title('Error vs. Degrees')
+    ax.legend(['Test Error', 'Training Error'])
+    ax.xaxis.set_label_text('Polynomial Degree')
+    ax.yaxis.set_label_text('Errors')
+    plt.show()
     ### ========== TODO : END ========== ###
 
-
-
-    ### ========== TODO : START ========== ###
-    # parts j-k (extra credit): main code for regularized regression
-    print 'Investigating regularized regression...'
-
-    ### ========== TODO : END ========== ###
 
 
 

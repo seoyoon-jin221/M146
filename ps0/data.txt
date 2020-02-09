@@ -1,0 +1,6 @@
+a. Name: Zoo animals Data Set
+b. Data can be obtained on kaggle, at https://www.kaggle.com/agajorte/zoo-animals-extended-dataset
+c. The features are biological traits of an animal, such as if the animal lays eggs, or has feathers.
+The label class that is being predicted is the classification of the animal, a class to which the animal belongs, which is an integer that ranges from 1 to 7.
+d. There are 43 examples (animals) in the dataset
+e. There are 16 features in the dataset.

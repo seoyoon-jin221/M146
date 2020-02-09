@@ -357,21 +357,24 @@ def main() :
     print 'Investigating linear regression...'
 
     model = PolynomialRegression()
-    """
+
     model.coef_ = np.zeros(2)
     print(model.cost(train_data.X, train_data.y))
     etas = [10**-4, 10**-3, 10**-2, 0.0407]
     for eta_ in etas:
         model.coef_ = np.zeros(2)
+        start = time.time()
         model.fit_GD(train_data.X, train_data.y, eta=eta_)
+        print(time.time() - start)
         print("Eta: %8.6f Cost: %5.2f" %(eta_, model.cost(train_data.X, train_data.y)))
-    """
-    #model.coef_ = np.zeros(2)
-    #start = time.time()
-    #model.fit(train_data.X, train_data.y)
-    #time_taken = time.time() - start
-    #print(time_taken)
-    #print("Cost: %5.2f" %(model.cost(train_data.X, train_data.y)))
+        print(model.coef_)
+
+    model.coef_ = np.zeros(2)
+    start = time.time()
+    model.fit(train_data.X, train_data.y)
+    print(time.time() - start)
+    print("Cost: %5.2f" %(model.cost(train_data.X, train_data.y)))
+    print(model.coef_)
     model.coef_ = np.zeros(2)
     model.fit_GD(train_data.X, train_data.y)
     print("Cost: %5.2f" %(model.cost(train_data.X, train_data.y)))
@@ -382,7 +385,7 @@ def main() :
     ### ========== TODO : START ========== ###
     # parts g-i: main code for polynomial regression
     print 'Investigating polynomial regression...'
-
+    """
 
     degrees = []
     train_errors = []
@@ -403,6 +406,7 @@ def main() :
     ax.xaxis.set_label_text('Polynomial Degree')
     ax.yaxis.set_label_text('Errors')
     plt.show()
+    """
     ### ========== TODO : END ========== ###
 
 
